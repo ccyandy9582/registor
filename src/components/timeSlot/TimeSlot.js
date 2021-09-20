@@ -3,30 +3,36 @@ import React, { useEffect, useState } from 'react'
 import { avalibleTime, data } from '../../service/data';
 import ApplierList from '../applierList/ApplierList';
 
-export default function({ selectedDate }) {
+export default function({ selectedDate, timeSlot, setTimeSlot }) {
   const [selectedTime, setSelectedTime] = useState()
-	let timeSlot
 
   const onChange = (event) => {
     setSelectedTime(event.target.value)
   }
 
-	if (avalibleTime) {
-		let today = avalibleTime.filter((slot) => slot.date.toDateString() === selectedDate.toDateString());
+  useEffect(()=>{
+    
+  })
 
-		timeSlot = today[0]?.time?.map((slot, index) => {
-			return (
+  if (avalibleTime) {
+    let today = avalibleTime.filter((slot) => slot.date.toDateString() === selectedDate.toDateString());
+
+    timeSlot = today[0]?.time?.map((slot, index) => {
+      return (
         <>
-          <input id={slot+index} type="radio" name="timeSlot" className="timeSlot" value={slot} checked={selectedTime===slot} onChange={onChange}/>
+          <input id={slot+index} type="radio" name="timeSlot" className="timeSlot" value={slot+selectedDate} checked={selectedTime===slot+selectedDate} onChange={onChange}/>
           <label htmlFor={slot+index}>{slot}</label>
         </>
       );
-		});
-	}
+    });
+  } else {
+    timeSlot = "empty classes"
+  }
+
 	return (
     <>
-      <ul className="timeSlotList" align="left">{timeSlot}</ul>
-      <ApplierList selectedDate={selectedDate} selectedTime={selectedTime}/>
+      <div className="timeSlotList" align="left">{timeSlot}</div>
+      <ol><ApplierList selectedDate={selectedDate} selectedTime={selectedTime}/></ol>
     </>
   )
 }
