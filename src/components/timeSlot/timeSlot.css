@@ -20,3 +20,7 @@ label {
 input[type="radio"]:checked + label {
   background-color: lightgray;
 }
+
+input[type="radio"]:hover + label {
+  background-color: lightgray;
+}

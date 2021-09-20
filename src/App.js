@@ -6,6 +6,7 @@ import TimeSlot from './components/timeSlot/TimeSlot';
 
 export default function App() {
 	const [ selectedDate, setSelectedDate ] = useState(new Date());
+	const [timeSlot, setTimeSlot] = useState()
 
 	return (
 		<form>
@@ -16,7 +17,8 @@ export default function App() {
 				onChange={setSelectedDate}
 				value={selectedDate}
 			/>
-			<TimeSlot selectedDate={selectedDate} />
+			<TimeSlot selectedDate={selectedDate} timeSlot={timeSlot} setTimeSlot={setTimeSlot} /> 
+			
 		</form>
 	);
 }

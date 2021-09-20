@@ -6,7 +6,8 @@ export default function ApplierList({ selectedDate, selectedTime }) {
 		let applierList = [];
 		selectedData.forEach((appliers) => {
 			appliers.applier.forEach((applier) => {
-				if (applier.time === selectedTime) applierList.push(applier.name);
+				console.log(applier.time === selectedTime, applier.time, "    " ,selectedTime.slice(0,11), '   ', ""+selectedDate)
+				if (applier.time === selectedTime.slice(0,11)) applierList.push(applier.name);
 			});
 		});
 
