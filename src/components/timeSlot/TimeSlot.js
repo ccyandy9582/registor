@@ -3,16 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { avalibleTime, data } from '../../service/data';
 import ApplierList from '../applierList/ApplierList';
 
-export default function({ selectedDate, timeSlot, setTimeSlot }) {
-  const [selectedTime, setSelectedTime] = useState()
+export default function({ selectedDate, timeSlot, setTimeSlot, selectedTime, setSelectedTime }) {
 
   const onChange = (event) => {
     setSelectedTime(event.target.value)
   }
-
-  useEffect(()=>{
-    
-  })
 
   if (avalibleTime) {
     let today = avalibleTime.filter((slot) => slot.date.toDateString() === selectedDate.toDateString());
@@ -25,8 +20,6 @@ export default function({ selectedDate, timeSlot, setTimeSlot }) {
         </>
       );
     });
-  } else {
-    timeSlot = "empty classes"
   }
 
 	return (
