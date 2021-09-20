@@ -1,0 +1,22 @@
+.timeSlotList {
+  display: inline;
+}
+
+input[type="radio"] {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+  margin: 0;
+}
+
+label {
+  display: table-cell;
+  text-align: center;
+  cursor: pointer;
+  padding: 10px 5px;
+  background-color: darkgrey;
+}
+
+input[type="radio"]:checked + label {
+  background-color: lightgray;
+}
