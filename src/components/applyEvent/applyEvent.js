@@ -1,24 +1,37 @@
-import { data } from "../../service/data";
+import {useState} from "react";
+import {newApplication} from "../../service/data";
 
-export default function ApplyEvent({selectedTime}) {
-  let name = "ccy"
+export default function ApplyEvent({selectedTime, selectedDate}) {
+  const [name, setName] = useState()
 
-  const apply = (event) => {
-    if (window.confirm(`Do you  want to join the event?\n
-      name: ${name}\n
-      at ${selectedTime}`)) {
-      alert("hi")
+  const onChange = (event) => {
+    setName(event.target.value)
+  }
+
+  const apply = async (event) => {
+    if (window.confirm(`你確定要參加這個活動?\n
+      你的名字: ${name}\n
+      日期: ${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}\n
+      時間: ${selectedTime.slice(0, 11)}`)) {
+      let correctDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`
+      const result = await newApplication(correctDate, name, selectedTime.slice(0, 11))
+      console.log(result)
     } else {
       selectedTime()
     }
   }
 
-	return (
-  <>
-    {selectedTime?(
-      <><input type="text" placeholder="Your name"></input>
-      <button onClick={(event)=>{apply(event)}}>Join</button><button>Cancel</button></>
-    ):null}
-  </>
+  return (
+    <>
+      {selectedTime ? (
+        <div style={{margin: "5px 0 0"}}><input type="text" placeholder="你的名字" onChange={onChange}></input>
+          <button onClick={(event) => {
+            apply(event)
+          }}>參加
+          </button>
+          <button>取消</button>
+        </div>
+      ) : null}
+    </>
   );
 }

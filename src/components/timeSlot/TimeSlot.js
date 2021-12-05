@@ -1,31 +1,23 @@
 import './timeSlot.css'
-import React, { useEffect, useState } from 'react'
-import { avalibleTime, data } from '../../service/data';
+import React from 'react'
 import ApplierList from '../applierList/ApplierList';
 
-export default function({ selectedDate, timeSlot, setTimeSlot, selectedTime, setSelectedTime }) {
-
+export default function ({selectedDate, timeSlot, selectedTime, setSelectedTime, applierList, setApplierList}) {
   const onChange = (event) => {
     setSelectedTime(event.target.value)
   }
 
-  if (avalibleTime) {
-    let today = avalibleTime.filter((slot) => slot.date.toDateString() === selectedDate.toDateString());
-
-    timeSlot = today[0]?.time?.map((slot, index) => {
-      return (
-        <>
-          <input id={slot+index} type="radio" name="timeSlot" className="timeSlot" value={slot+selectedDate} checked={selectedTime===slot+selectedDate} onChange={onChange}/>
-          <label htmlFor={slot+index}>{slot}</label>
-        </>
-      );
-    });
-  }
-
-	return (
+  return (
     <>
-      <div className="timeSlotList" align="left">{timeSlot}</div>
-      <ol><ApplierList selectedDate={selectedDate} selectedTime={selectedTime}/></ol>
+      {timeSlot.length > 0 ?
+        <div className="timeSlotList" align="left" onChange={onChange}>{timeSlot}</div> : "沒有時段可以報名"}
+      <ol>
+        <ApplierList
+          selectedDate={selectedDate}
+          selectedTime={selectedTime}
+          applierList={applierList}
+          setApplierList={setApplierList}/>
+      </ol>
     </>
   )
 }

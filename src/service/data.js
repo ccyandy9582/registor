@@ -1,55 +1,71 @@
-export const data = [
-	{
-		date    : new Date(),
-		applier : [
-			{
-				name : 'andy',
-				time : '1800 - 1930'
-			},
-			{
-				name : 'bonnie',
-				time : '1800 - 1930'
-			},
-			{
-				name : 'killian',
-				time : '1930 - 2100'
-			}
-		]
-	},
-	{
-		date    : new Date('2021-09-18'),
-		applier : [
-			{
-				name : 'candy',
-				time : '1600 - 1800'
-			},
-			{
-				name : 'danny',
-				time : '0900 - 1100'
-			}
-		]
-	}
-];
+import axios from "axios";
 
-export const avalibleTime = [
-	{
-		date : new Date(),
-		time : [ '1800 - 1930', '1930 - 2100' ]
-	},
-	{
-		date : new Date('2021-09-18'),
-		time : [ '0900 - 1100', '1100 - 1300', '1600 - 1800' ]
-	},
-	{
-		date: new Date('2021-09-11'),
-		time: [ '0900 - 1100']
-	},
-	{
-		date: new Date('2021-09-12'),
-		time: [ '0900 - 1100', '1100 - 1300', '1600 - 1800' ]
-	},
-	{
-		date: new Date('2021-09-13'),
-		time: [ '0900 - 1100', '1100 - 1300']
-	}
-];
+const baseURL = "http://localhost:8083/"
+
+export const getApplications = () => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "get",
+      url: baseURL + "getAllAppliers"
+    }).then((res) => {
+      resolve(res)
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+}
+
+export const getAvalibleTime = (weekday) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: baseURL + "getAvailableTime/" + weekday?.toUpperCase(),
+      method: 'get'
+    }).then((res) => {
+      resolve(res)
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+};
+
+export const getApplicationsByDate = (date) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: baseURL + "getApplierByDate/" + date,
+      method: "get"
+    }).then(res => {
+      resolve(res)
+    }).catch(err => reject(err))
+  })
+}
+
+export const deleteApplication = (_id) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: baseURL + "deleteApplication/" + _id,
+      method: 'delete'
+    }).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+
+export const newApplication = (date, name, time) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      url: baseURL + "newApplication",
+      method: "post",
+      data: {
+        date,
+        name,
+        time
+      }
+    }).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
