@@ -19,33 +19,35 @@ export default function App() {
 		setSelectedTime(event.target.value);
 	};
 
-	useEffect(
-		async () => {
-			setTimeSlot([]);
-			setIsLoading(true);
-			console.log(`selectedDate: ${selectedDate}`);
-			const weekday = selectedDate.toDateString().slice(0, 3).trim();
-			const tempAvailable = await getAvalibleTime(weekday);
-			console.log(tempAvailable);
-			setTimeSlot(
-				tempAvailable.data[0].time.map((slot, index) => {
-					return (
-						<>
-							<input
-								id={slot + index}
-								type="radio"
-								name="timeSlot"
-								className="timeSlot"
-								value={slot + selectedDate}
-								checked={selectedTime === slot + selectedDate}
-								onChange={timeSlotOnChange}
-							/>
-							<label htmlFor={slot + index}>{slot}</label>
-						</>
-					);
-				})
-			);
-			setIsLoading(false);
+	useEffect(() => {
+      async function getAvalibleTimeData () {
+        setTimeSlot([]);
+        setIsLoading(true);
+        console.log(`selectedDate: ${selectedDate}`);
+        const weekday = selectedDate.toDateString().slice(0, 3).trim();
+        const tempAvailable = await getAvalibleTime(weekday);
+        console.log(tempAvailable);
+        setTimeSlot(
+          tempAvailable.data[0].time.map((slot, index) => {
+            return (
+              <>
+                <input
+                  id={slot + index}
+                  type="radio"
+                  name="timeSlot"
+                  className="timeSlot"
+                  value={slot + selectedDate}
+                  checked={selectedTime === slot + selectedDate}
+                  onChange={timeSlotOnChange}
+                />
+                <label htmlFor={slot + index}>{slot}</label>
+              </>
+            );
+          })
+        );
+        setIsLoading(false);
+      }
+      getAvalibleTimeData()
 		},
 		[ selectedDate ]
 	);

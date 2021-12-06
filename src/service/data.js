@@ -51,10 +51,7 @@ export const deleteApplication = (_id) => {
 	return new Promise((resolve, reject) => {
 		axios({
 			url    : baseURL + 'deleteApplication/' + _id,
-			method : 'delete',
-			params : {
-				_id : _id
-			}
+			method : 'delete'
 		})
 			.then((res) => {
 				resolve(res);

@@ -9,21 +9,27 @@ export default function ApplierList({ selectedDate, selectedTime, applierList, s
 	};
 
 	useEffect(
-		async () => {
-			let day = '0' + selectedDate.getDate();
-			const correctDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${day.slice(-2)}`;
-			setIsLoading(true);
-			setApplierList([]);
-			const applications = await getApplications();
-			let tempList = [];
-			setIsLoading(false);
-			applications.data.forEach((application) => {
-				if (selectedTime) {
-					if (correctDate == application.date.split('T')[0] && selectedTime.slice(0, 11) == application.time)
-						tempList.push(application.name + ',' + application._id);
-				}
-			});
-			setApplierList(tempList);
+		() => {
+			async function getApplicationsData() {
+				let day = '0' + selectedDate.getDate();
+				const correctDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${day.slice(-2)}`;
+				setIsLoading(true);
+				setApplierList([]);
+				const applications = await getApplications();
+				let tempList = [];
+				setIsLoading(false);
+				applications.data.forEach((application) => {
+					if (selectedTime) {
+						if (
+							correctDate == application.date.split('T')[0] &&
+							selectedTime.slice(0, 11) == application.time
+						)
+							tempList.push(application.name + ',' + application._id);
+					}
+				});
+				setApplierList(tempList);
+			}
+			getApplicationsData();
 		},
 		[ selectedTime ]
 	);
