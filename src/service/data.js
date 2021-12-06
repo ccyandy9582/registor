@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:8083/"
+const baseURL = "http://3.140.181.237/:8083/"
 
 export const getApplications = () => {
   return new Promise((resolve, reject) => {
