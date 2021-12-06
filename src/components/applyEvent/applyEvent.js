@@ -9,15 +9,17 @@ export default function ApplyEvent({selectedTime, selectedDate}) {
   }
 
   const apply = async (event) => {
-    if (window.confirm(`你確定要參加這個活動?\n
+    if (name) {
+      let day = `0${selectedDate.getDate()}`.slice(-2)
+      if (window.confirm(`你確定要參加這個活動?\n
       你的名字: ${name}\n
-      日期: ${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}\n
+      日期: ${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${day}\n
       時間: ${selectedTime.slice(0, 11)}`)) {
-      let correctDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`
-      const result = await newApplication(correctDate, name, selectedTime.slice(0, 11))
-      console.log(result)
-    } else {
-      selectedTime()
+        let correctDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${day}`
+        const result = await newApplication(new Date(correctDate), name, selectedTime.slice(0, 11))
+      } else {
+        selectedTime()
+      }
     }
   }
 
