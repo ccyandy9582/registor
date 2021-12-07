@@ -21,7 +21,6 @@ export default function ApplyEvent({selectedTime, selectedDate}) {
       時間: ${selectedTime.slice(0, 11)}`)) {
         let correctDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${day}`
         newApplicationPost(correctDate, name, selectedTime)
-        alert()
       } else {
         selectedTime()
       }
