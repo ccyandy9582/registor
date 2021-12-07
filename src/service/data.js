@@ -39,7 +39,7 @@ export const getAvalibleTime = (weekday = '') => {
 
 export const deleteApplication = (_id) => {
 	return applicationApi
-		.delete(`/deleteApplication/${_id}`, { cancelToken: source.token })
+		.get(`/deleteApplication/${_id}`, { cancelToken: source.token })
 		.then((res) => {
 			console.log(`deleteApplication success\n${res}`);
 			return res;
@@ -52,7 +52,7 @@ export const deleteApplication = (_id) => {
 
 export const newApplication = (date, name, time) => {
 	return applicationApi
-		.post('/newApplication', { date, name, time }, { cancelToken: source.token })
+		.get(`/newApplication/${date}/${name}/${time}`, { date, name, time }, { cancelToken: source.token })
 		.then((res) => {
 			console.log(`newApplication success\n${res}`);
 			return res;
