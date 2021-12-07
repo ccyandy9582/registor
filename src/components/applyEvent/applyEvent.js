@@ -8,7 +8,11 @@ export default function ApplyEvent({selectedTime, selectedDate}) {
     setName(event.target.value)
   }
 
-  const apply = async (event) => {
+  const newApplicationPost = async (correctDate, name, time) => {
+    const result = await newApplication(new Date(correctDate), name, time.slice(0, 11))
+  }
+
+  const apply = (event) => {
     if (name) {
       let day = `0${selectedDate.getDate()}`.slice(-2)
       if (window.confirm(`你確定要參加這個活動?\n
@@ -16,7 +20,8 @@ export default function ApplyEvent({selectedTime, selectedDate}) {
       日期: ${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${day}\n
       時間: ${selectedTime.slice(0, 11)}`)) {
         let correctDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${day}`
-        const result = await newApplication(new Date(correctDate), name, selectedTime.slice(0, 11))
+        newApplicationPost(correctDate, name, selectedTime)
+        alert()
       } else {
         selectedTime()
       }
