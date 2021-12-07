@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-const CancelToken = axios.CancelToken;
-const source = CancelToken.source();
-
 const applicationApi = axios.create({
 	baseURL : 'http://3.140.181.237:8083/api',
 	headers : {
@@ -12,88 +9,45 @@ const applicationApi = axios.create({
 });
 
 export const getApplications = () => {
-	return applicationApi.get('/getAllAppliers');
-	// return new Promise((resolve, reject) => {
-	//   axios({
-	//     method: 'get',
-	//     url: baseURL + 'getAllAppliers'
-	//   })
-	//     .then((res) => {
-	//       resolve(res);
-	//     })
-	//     .catch((err) => {
-	//       reject(err);
-	//     });
-	// });
+	return applicationApi
+		.get('/getAllAppliers')
+		.then((res) => {
+			console.log(`getAllAppliers success\n${res}`);
+		})
+		.catch((err) => {
+			console.log(`getAllAppliers failure\n${err}`);
+		});
 };
 
 export const getAvalibleTime = (weekday = '') => {
-	return applicationApi.get(`/getAvailableTime/${weekday.toUpperCase()}`);
-	// return new Promise((resolve, reject) => {
-	//   axios({
-	//     url: baseURL + 'getAvailableTime/' + weekday.toUpperCase(),
-	//     method: 'get'
-	//   })
-	//     .then((res) => {
-	//       resolve(res);
-	//     })
-	//     .catch((err) => {
-	//       reject(err);
-	//     });
-	// });
+	return applicationApi
+		.get(`/getAvailableTime/${weekday.toUpperCase()}`)
+		.then((res) => {
+			console.log(`getAvailableTime success\n${res}`);
+		})
+		.catch((err) => {
+			console.log(`getAvailableTime failure\n${err}`);
+		});
 };
 
-// export const getApplicationsByDate = (date) => {
-// return new Promise((resolve, reject) => {
-//   axios({
-//     url: baseURL + 'getApplierByDate/' + date,
-//     method: 'get'
-//   })
-//     .then((res) => {
-//       resolve(res);
-//     })
-//     .catch((err) => {
-//       reject(err);
-//     });
-// });
-// };
-
 export const deleteApplication = (_id) => {
-	return applicationApi.delete(`/deleteApplication/${_id}`, {
-		cancelToken : source.token
-	});
-	// return new Promise((resolve, reject) => {
-	//   axios({
-	//     url: baseURL + 'deleteApplication/' + _id,
-	//     method: 'delete'
-	//   })
-	//     .then((res) => {
-	//       resolve(res);
-	//     })
-	//     .catch((err) => {
-	//       reject(err);
-	//     });
-	// });
+	return applicationApi
+		.delete(`/deleteApplication/${_id}`)
+		.then((res) => {
+			console.log(`deleteApplication success\n${res}`);
+		})
+		.catch((err) => {
+			console.log(`deleteApplication failure\n${err}`);
+		});
 };
 
 export const newApplication = (date, name, time) => {
-	return applicationApi.post('/newApplication', { date, name, time });
-	// alert(`/newApplication\n${date}\n${name}\n${time}`);
-	// return new Promise((resolve, reject) => {
-	//   axios({
-	//     url: baseURL + 'newApplication/',
-	//     method: 'POST',
-	//     data: {
-	//       date,
-	//       name,
-	//       time
-	//     }
-	//   })
-	//     .then((res) => {
-	//       resolve(res);
-	//     })
-	//     .catch((err) => {
-	//       reject(err);
-	//     });
-	// });
+	return applicationApi
+		.post('/newApplication', { date, name, time })
+		.then((res) => {
+			console.log(`newApplication success\n${res}`);
+		})
+		.catch((err) => {
+			console.log(`newApplication failure\n${err}`);
+		});
 };
