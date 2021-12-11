@@ -1,8 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {deleteApplication, getApplications} from '../../service/data';
+import {AppStateContext} from "../../context/AppStateContext";
 
-export default function ApplierList({selectedDate, selectedTime, applierList, setApplierList}) {
+export default function ApplierList() {
   const [isLoading, setIsLoading] = useState(true);
+  const {selectedDate, selectedTime, applierList, setApplierList} = useContext(AppStateContext)
 
   const deleteBtnOnclick = (event) => {
     if (window.confirm(`你確定要退出嗎？`)) {
@@ -12,29 +14,33 @@ export default function ApplierList({selectedDate, selectedTime, applierList, se
 
   useEffect(
     () => {
-      async function getApplicationsData() {
+      if (selectedDate) {
+        async function getApplicationsData() {
+          return await getApplications();
+        }
+
         let day = '0' + selectedDate.getDate();
         const correctDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${day.slice(-2)}`;
         setIsLoading(true);
         setApplierList([]);
-        const applications = await getApplications();
-        let tempList = [];
-        setIsLoading(false);
-        applications.data.forEach((application) => {
-          if (selectedTime) {
-            if (
-              correctDate === application.date.split('T')[0] &&
-              selectedTime.slice(0, 11) === application.time
-            )
-              tempList.push(application.name + ',' + application._id);
-          }
-        });
-        setApplierList(tempList);
-      }
 
-      getApplicationsData();
+        getApplicationsData().then(applications => {
+          let tempList = [];
+          setIsLoading(false);
+          applications.data.forEach((application) => {
+            if (selectedTime) {
+              if (
+                correctDate === application.date.split('T')[0] &&
+                selectedTime.slice(0, 11) === application.time
+              )
+                tempList.push(application.name + ',' + application._id);
+            }
+          });
+          setApplierList(tempList);
+        });
+      }
     },
-    [selectedTime]
+    [selectedTime, selectedDate, setApplierList]
   );
 
   if (!isLoading) {
