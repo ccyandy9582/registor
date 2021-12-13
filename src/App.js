@@ -1,82 +1,59 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import TimeSlot from './components/timeSlot/TimeSlot';
-import {getAvalibleTime, newApplication} from './service/data';
+import {deleteApplication, newApplication} from './service/data';
 import './App.css';
 import {AppStateContext} from "./context/AppStateContext";
-import {useForm, Controller} from 'react-hook-form'
-import ApplierList from "./components/applierList/ApplierList";
+import {useForm} from 'react-hook-form'
 
 export default function App() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [timeSlot, setTimeSlot] = useState([]);
   const [selectedTime, setSelectedTime] = useState();
   const [applierList, setApplierList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const {handleSubmit, register, formState: {errors}, control} = useForm()
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorTime, setErrorTime] = useState(false)
+  const [checkedValue, setCheckedValue] = useState("")
+  const {handleSubmit, register, formState: {errors}} = useForm()
+
+  function deleteBtnOnclick(_id) {
+    if (window.confirm(`你確定要退出嗎？`)) {
+      return deleteApplication(_id)
+    }
+  }
 
   const applicationContext = {
     selectedDate, setSelectedDate,
     selectedTime, setSelectedTime,
     timeSlot, setTimeSlot,
     applierList, setApplierList,
-    isLoading, setIsLoading
+    isLoading, setIsLoading,
+    checkedValue, setCheckedValue,
+    setErrorTime,
+    deleteBtnOnclick
   }
 
-  const timeSlotOnChange = (event) => {
-    console.log(event.target.value);
-    setSelectedTime(event.target.value);
-  };
-
-  useEffect(() => {
-    console.log("component did mount")
-  })
-
-  // useEffect(() => {
-  //     async function getAvailableTimeData(weekday) {
-  //       return await getAvalibleTime(weekday);
-  //     }
-  //
-  //     setTimeSlot([]);
-  //     setIsLoading(true);
-  //     let weekday = selectedDate.toDateString().slice(0, 3).trim();
-  //     getAvailableTimeData(weekday).then(tempAvailable => {
-  //       setTimeSlot(
-  //         tempAvailable.data[0].time.map((slot, index) => {
-  //           return (
-  //             <>
-  //               <input
-  //                 id={slot + index}
-  //                 type="radio"
-  //                 name="timeSlot"
-  //                 className="timeSlot"
-  //                 value={slot + selectedDate}
-  //                 checked={selectedTime === slot + selectedDate}
-  //                 onChange={timeSlotOnChange}
-  //               />
-  //               <label htmlFor={slot + index}>{slot}</label>
-  //             </>
-  //           );
-  //         })
-  //       );
-  //     })
-  //     setIsLoading(false);
-  //   },
-  //   [selectedDate, selectedTime]
-  // );
-
-
-  function sendPOSTRequest() {
+  function sendPOSTRequest(date, name, time) {
     const temp = async () => {
-      return await newApplication(new Date("2021-12-13"), 'testing 791', '1930 - 2100')
+      return await newApplication(date, name, time)
     }
-    temp().then(res => console.log(res))
+    return temp
   }
 
   const onSubmit = (value) => {
-    console.log(value)
-    sendPOSTRequest()
+    if (!selectedTime) setErrorTime(true)
+    else {
+      let correctDate = `${selectedDate.getFullYear()}-${selectedDate.getUTCMonth() + 1}-${selectedDate.getDate()}`
+      console.log(value.name)
+      console.log(new Date(correctDate))
+      console.log(selectedTime.slice(0, 11))
+      const postResult = sendPOSTRequest(new Date(correctDate), value.name, selectedTime.slice(0, 11))
+      postResult().then(res => {
+        setApplierList([...applierList, `${res.data.name},${res.data._id}`])
+        alert(`${value.name}已成功參加在${selectedDate.toISOString().split('T')[0]} ${selectedTime.slice(0, 11)}的課堂`)
+      })
+    }
   }
 
   const calendarHandleChange = (value) => {
@@ -91,18 +68,16 @@ export default function App() {
       <Calendar
         className={"myCal"}
         minDetail="year"
-        calendarType={'US'}
         value={selectedDate}
         onChange={calendarHandleChange}
       />
-      <p></p>
       {isLoading ? "等下啦⋯⋯" : (<div>
         <input {...register("name", {required: true, minLength: 1})} placeholder={"請輸入你個名"}/>
         <button type={"submit"}>提交</button>
         <button type={"reset"}>取消</button>
-        {console.log(errors)}
         {errors.name && errors.name?.type === 'required' ? <p className={"errorMessage"}>請輸名你個大名</p> : ""}
         <TimeSlot/>
+        {errorTime ? <p className={"errorMessage"}>揀返個時段丫唔該</p> : ""}
       </div>)}
     </form>
   </AppStateContext.Provider>

@@ -1,16 +1,10 @@
 import {useContext, useEffect, useState} from 'react';
-import {deleteApplication, getApplications} from '../../service/data';
+import {getApplications} from '../../service/data';
 import {AppStateContext} from "../../context/AppStateContext";
 
 export default function ApplierList() {
   const [isLoading, setIsLoading] = useState(true);
-  const {selectedDate, selectedTime, applierList, setApplierList} = useContext(AppStateContext)
-
-  const deleteBtnOnclick = (event) => {
-    if (window.confirm(`你確定要退出嗎？`)) {
-      deleteApplication(event.target.id).then(r => alert(r));
-    }
-  };
+  const {selectedDate, selectedTime, applierList, setApplierList, deleteBtnOnclick} = useContext(AppStateContext)
 
   useEffect(
     () => {
@@ -43,22 +37,39 @@ export default function ApplierList() {
     [selectedTime, selectedDate, setApplierList]
   );
 
+  const updateApplierList = (event) => {
+    const updatedApplierList = applierList.map(applier => {
+      let id = applier.split(',')[1]
+      if (id !== event.target.id) return applier
+    })
+    setApplierList(updatedApplierList)
+  }
+
+  const handleRemove = (event) => {
+    deleteBtnOnclick(event.target.id).then(() => {
+      alert(`${event.target.name}已成功退出在${selectedDate.toISOString().split("T")[0]} ${selectedTime.slice(0, 11)}的課堂`)
+      updateApplierList(event)
+    }).catch(err => console.log(err))
+  }
+
   if (!isLoading) {
     if (selectedDate && selectedTime) {
       if (applierList.length > 0) {
         return applierList.map((details, index) => {
-          let name = details.split(',')[0];
-          let id = details.split(',')[1];
-          return (
-            <div align={'left'} key={name + id + index}>
-              <li>
-                {name}&emsp;
-                <button id={id} onClick={deleteBtnOnclick}>
-                  刪除
-                </button>
-              </li>
-            </div>
-          );
+          if (details) {
+            let name = details.split(',')[0];
+            let id = details.split(',')[1];
+            return (
+              <div align={'left'} key={name + id + index}>
+                <li>
+                  {name}&emsp;
+                  <button type={"button"} name={name} id={id} onClick={handleRemove}>
+                    刪除
+                  </button>
+                </li>
+              </div>
+            );
+          }
         });
       } else return '尚未有人報名';
     } else {
