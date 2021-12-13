@@ -34,7 +34,7 @@ export default function ApplierList() {
         });
       }
     },
-    [selectedTime, selectedDate, setApplierList]
+    [selectedTime]
   );
 
   const updateApplierList = (event) => {
@@ -46,7 +46,7 @@ export default function ApplierList() {
   }
 
   const handleRemove = (event) => {
-    deleteBtnOnclick(event.target.id).then(() => {
+    deleteBtnOnclick(event.target.id, event.target.name).then(() => {
       alert(`${event.target.name}已成功退出在${selectedDate.toISOString().split("T")[0]} ${selectedTime.slice(0, 11)}的課堂`)
       updateApplierList(event)
     }).catch(err => console.log(err))

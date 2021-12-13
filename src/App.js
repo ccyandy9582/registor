@@ -17,8 +17,8 @@ export default function App() {
   const [checkedValue, setCheckedValue] = useState("")
   const {handleSubmit, register, formState: {errors}} = useForm()
 
-  function deleteBtnOnclick(_id) {
-    if (window.confirm(`你確定要退出嗎？`)) {
+  function deleteBtnOnclick(_id, name) {
+    if (window.confirm(`你(${name})確定要退出嗎？`)) {
       return deleteApplication(_id)
     }
   }
@@ -45,14 +45,13 @@ export default function App() {
     if (!selectedTime) setErrorTime(true)
     else {
       let correctDate = `${selectedDate.getFullYear()}-${selectedDate.getUTCMonth() + 1}-${selectedDate.getDate()}`
-      console.log(value.name)
-      console.log(new Date(correctDate))
-      console.log(selectedTime.slice(0, 11))
-      const postResult = sendPOSTRequest(new Date(correctDate), value.name, selectedTime.slice(0, 11))
-      postResult().then(res => {
-        setApplierList([...applierList, `${res.data.name},${res.data._id}`])
-        alert(`${value.name}已成功參加在${selectedDate.toISOString().split('T')[0]} ${selectedTime.slice(0, 11)}的課堂`)
-      })
+      if (window.confirm(`你(${value.name})確定要參加\n係${selectedDate.getFullYear()}年${selectedDate.getUTCMonth() + 1}月${selectedDate.getDate()}日\n${selectedTime.slice(0, 11)}的活動嗎？`)) {
+        const postResult = sendPOSTRequest(new Date(correctDate), value.name, selectedTime.slice(0, 11))
+        postResult().then(res => {
+          setApplierList([...applierList, `${res.data.name},${res.data._id}`])
+          alert(`${value.name}已成功參加在${selectedDate.toISOString().split('T')[0]} ${selectedTime.slice(0, 11)}的課堂`)
+        })
+      }
     }
   }
 

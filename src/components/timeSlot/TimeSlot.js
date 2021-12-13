@@ -25,7 +25,7 @@ export default function TimeSlot() {
 
   useEffect(() => {
     setCheckedValue("")
-  }, [selectedDate, setCheckedValue])
+  }, [selectedDate])
 
   useEffect(() => {
     setIsLoading(true)
@@ -40,8 +40,6 @@ export default function TimeSlot() {
         availableTime = timeArr.map((slot, index) => {
           return (
             <>
-              <div>slot + selectedDate: {slot + selectedDate}</div>
-              <div>checkedValue: {checkedValue}</div>
               <input id={slot + index} type="radio" name="timeSlot" className="timeSlot" value={slot + selectedDate}
                      checked={selectedTime === checkedValue} onChange={handleChange}/>
               <label htmlFor={slot + index}>{slot}</label>
@@ -52,7 +50,7 @@ export default function TimeSlot() {
       setTimeSlot(availableTime)
     }).catch(err => console.log(err))
     setIsLoading(false)
-  }, [selectedDate, checkedValue, handleChange, selectedTime, setCheckedValue, setIsLoading, setTimeSlot])
+  }, [selectedDate])
 
   return (
     <div>
