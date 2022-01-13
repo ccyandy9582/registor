@@ -44,7 +44,7 @@ export default function App() {
   const onSubmit = (value) => {
     if (!selectedTime) setErrorTime(true)
     else {
-      let correctDate = `${selectedDate.getFullYear()}-${selectedDate.getUTCMonth() + 1}-${selectedDate.getDate()}`
+      let correctDate = selectedDate.toISOString().split("T")[0]
       if (window.confirm(`你(${value.name})確定要參加\n係${selectedDate.getFullYear()}年${selectedDate.getUTCMonth() + 1}月${selectedDate.getDate()}日\n${selectedTime.slice(0, 11)}的活動嗎？`)) {
         const postResult = sendPOSTRequest(new Date(correctDate), value.name, selectedTime.slice(0, 11))
         postResult().then(res => {
@@ -59,6 +59,7 @@ export default function App() {
     console.log(value.toISOString())
     setApplierList([])
     setSelectedDate(value)
+    setErrorTime(true)
   }
 
   return <AppStateContext.Provider value={applicationContext}>
